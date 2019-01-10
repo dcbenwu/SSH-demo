@@ -16,7 +16,7 @@ public class SshClient implements TL1TransportInf {
 	protected Thread consumerThread;
 	
 	//int timeout = 120*1000;
-    int timeout = 5*1000;
+    int timeout = 30*1000;
 	String ipAddress = null;
 	String port = null;
 	
@@ -133,7 +133,9 @@ public class SshClient implements TL1TransportInf {
 					str = consumer.pause();
 					log.debug("get output: " + str);
 					foundEof = consumer.foundEOF();
+					log.debug("pattern is " + pattern);
 					end = matchLine(str, pattern);
+					log.debug("match result is " + end);
 					if (!end) {
 						consumer.resume();
 					} else {

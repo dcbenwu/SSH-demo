@@ -28,9 +28,14 @@ if (Environment.isDevelopmentMode() && targetDir != null) {
         file = "${targetDir}/stacktrace.log"
         append = true
         encoder(PatternLayoutEncoder) {
-            pattern = "%level %logger - %msg%n"
+            pattern =
+                    '%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} ' + // Date
+                            '%clr(%5p) ' + // Log level
+                            '%clr(---){faint} %clr([%15.15t]){faint} ' + // Thread
+                            '%clr(%-40.40logger{39}){cyan} %clr(:){faint} ' + // Logger
+                            '%m%n%wex' // Message
         }
     }
-    logger("StackTrace", ERROR, ['FULL_STACKTRACE'], false)
+    logger("StackTrace", INFO, ['FULL_STACKTRACE'], false)
 }
-root(INFO, ['STDOUT'])
+root(INFO, ['STDOUT', 'FULL_STACKTRACE'])

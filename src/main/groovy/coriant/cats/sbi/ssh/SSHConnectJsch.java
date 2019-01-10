@@ -20,6 +20,7 @@ public class SSHConnectJsch extends JschConnectCommon implements SSHConnectInf {
 			session.setPassword(password);
 			Hashtable<String, String> config = new Hashtable<String, String>();
 			config.put("StrictHostKeyChecking", "no");
+			//config.put("kex", "diffie-hellman-group1-sha1");
 			session.setConfig(config);
 			UserInfo ui = new LocalUserInfo();
 			session.setUserInfo(ui);
@@ -38,9 +39,9 @@ public class SSHConnectJsch extends JschConnectCommon implements SSHConnectInf {
 			out = channel.getOutputStream();
 			channel.connect();
 		} catch (JSchException je) {
-			String errorInfo = je.getMessage();
-			if (errorInfo.indexOf("Auth ")>=0) errorInfo = SSHConnectInf.AUTH_ERROR;
-			log.fatal(je.getMessage(), je);
+			String errorInfo = "LogTag on " + ipAddress + ": " + je.getMessage();
+			if (errorInfo.indexOf("Auth ")>=0) errorInfo = "LogTag on " + ipAddress + ": " + SSHConnectInf.AUTH_ERROR;
+			log.fatal(errorInfo, je);
 			if (session != null && session.isConnected()) {
 				session.disconnect();
 			}
@@ -49,7 +50,7 @@ public class SSHConnectJsch extends JschConnectCommon implements SSHConnectInf {
 			}
 			throw new Exception(errorInfo);
 		} catch (Exception ex) {
-			String errorInfo = ex.getMessage();
+			String errorInfo = "LogTag on " + ipAddress + ": " + ex.getMessage();
 			log.fatal(errorInfo, ex);
 			if (session != null && session.isConnected()) {
 				session.disconnect();
